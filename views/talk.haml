@@ -1,0 +1,14 @@
+%h2 Yo #{@username}
+
+.call
+  <video></video>
+
+.online
+  %h3 Who's online to call:
+
+  #users_online
+    %p Loading...
+
+<script src="/javascripts/app.js"></script>
+:javascript
+  App.username = '#{@username}';

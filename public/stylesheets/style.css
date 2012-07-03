@@ -1,0 +1,43 @@
+html, body {
+  height:100%;
+  font-family: "Helvetica", Arial, sans-serif
+}
+
+h1, h2, h3, p {
+  padding:0;
+  margin:0;
+  font-weight:normal;
+  color:#333;
+}
+
+/* General Layout */
+.container {
+  margin: 0 auto;
+  width:700px;
+  height:100%;
+}
+
+h1, h2 {
+  padding:5px 0;
+}
+
+/* Talk page */
+.call, .online {
+  height:100%;
+  float:left;
+}
+
+.call {
+  width:410px;
+  padding:0 5px;
+}
+
+.call video {
+  background-color:#ccc;
+  width:400px;
+  height:400px;
+}
+
+.online {
+  width: 190px;
+}
