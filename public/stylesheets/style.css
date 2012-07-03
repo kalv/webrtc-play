@@ -32,10 +32,18 @@ h1, h2 {
   padding:0 5px;
 }
 
-.call video {
+.call video#remote {
   background-color:#ccc;
   width:400px;
   height:400px;
+}
+.call video#local {
+  background-color:#eee;
+  width:100px;
+  height:100px;
+}
+.call video {
+  float:left;
 }
 
 .online {
