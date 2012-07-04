@@ -45,6 +45,18 @@ class WebrtcApp < Sinatra::Base
     haml :talk
   end
 
+  post "/call_user/:username" do
+    p "Calling user - #{params[:username]} with offer: #{params[:offer]}"
+    json_data = JSON({:offer => params[:offer], :username => session[:username]})
+    connections[params[:username]] << "event:incoming_call\ndata:#{json_data}\n\n"
+  end
+
+  post "/answer_call/:username" do
+    p "answering call - #{params[:username]} with answer: #{params[:answer]}"
+    json_data = JSON({:answer => params[:answer], :username => params[:username]})
+    connections[params[:username]] << "event:answer_call\ndata:#{json_data}\n\n"
+  end
+
   get "/sse" do
     content_type 'text/event-stream'
     stream(:keep_open) { |out|
