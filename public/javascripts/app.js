@@ -34,14 +34,14 @@ var App = {
       var offer = new SessionDescription(call.offer);
       App.pc.setRemoteDescription(App.pc.SDP_OFFER, offer);
 
-      //answer = App.pc.createAnswer(offer, {has_audio:true, has_video:true});
-      //console.log("Created answer:\n"+answer.toSdp());
-      //App.pc.setLocalDescription(App.pc.SDP_ANSWER, answer);
+      answer = App.pc.createAnswer(offer, {has_audio:true, has_video:true});
+      console.log("Created answer:\n"+answer.toSdp());
+      App.pc.setLocalDescription(App.pc.SDP_ANSWER, answer);
 
-      //// SEND Answer to CALLER
-      //$.post("/answer_call/"+call.username, {answer: answer.toSdp()}, function(){
-      //  App.pc.startIce();
-      //});
+      // SEND Answer to CALLER
+      $.post("/answer_call/"+call.username, {answer: answer.toSdp()}, function(){
+        App.pc.startIce();
+      });
 
       //TODO waitForRemoteVideo() ?
     });
