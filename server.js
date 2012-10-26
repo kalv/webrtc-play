@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -38,7 +37,6 @@ var server = http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
-var usernames_online = [];
 var usernames_sockets = {};
 
 io = require('socket.io').listen(server);
@@ -48,7 +46,6 @@ io.sockets.on('connection', function (socket) {
   socket.on('set username', function(data){
     console.log("new username online: " + data.username);
     socket.set("username", data.username); // for disconnection and remove of presence
-    usernames_online.push(data.username);
     usernames_sockets[data.username] = socket;
   });
 
@@ -59,5 +56,5 @@ io.sockets.on('connection', function (socket) {
 });
 
 setInterval(function() {
-  io.sockets.emit('users-online', usernames_online);
+  io.sockets.emit('users-online', Object.keys(usernames_sockets));
 }, 1500);
