@@ -46,15 +46,18 @@ class WebrtcApp < Sinatra::Base
   end
 
   post "/call_user/:username" do
-    p "Calling user - #{params[:username]} with offer: #{params[:offer]}"
-    json_data = JSON({:offer => params[:offer], :username => session[:username]})
-    connections[params[:username]] << "event:incoming_call\ndata:#{json_data}\n\n"
+    p "Calling user - #{params[:username]}" # with offer: #{params[:offer]}"
+    # using string rather than JSON because of issues serializing SDP data over evenstream
+    # will become a non-issue with Socket IO or Websockets
+    data = "#{params[:offer]}----#{session[:username]}"
+    connections[params[:username]] << "event:incoming_call\ndata:#{data}\n\n"
   end
 
   post "/answer_call/:username" do
-    p "answering call - #{params[:username]} with answer: #{params[:answer]}"
-    json_data = JSON({:answer => params[:answer], :username => params[:username]})
-    connections[params[:username]] << "event:answer_call\ndata:#{json_data}\n\n"
+    p "answering call - #{params[:username]}" # with answer: #{params[:answer]}"
+    # again use string based data struct
+    data = "#{params[:answer]}----#{params[:username]}"
+    connections[params[:username]] << "event:answer_call\ndata:#{data}\n\n"
   end
 
   get "/sse" do
@@ -66,7 +69,6 @@ class WebrtcApp < Sinatra::Base
       timers[session[:username]] =
         EventMachine::PeriodicTimer.new(2) {
           # TODO: cancel timer if out connection is dead?
-          p "updating who's online for #{session[:username]}"
           out << "event:users_online\ndata:#{connections.keys.join(",")}\n\n"
         }
       connections[session[:username]] = out
