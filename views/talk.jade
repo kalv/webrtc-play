@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h2 Hello #{username}!
+
+  .call
+    <video id="remote" autoplay></video>
+
+    <video id="local" autoplay></video>
+
+  .online
+    h3 Who's online to call:
+
+    #users_online
+      p Loading...
+
+  script(src="/socket.io/socket.io.js")
+  script(src="/javascripts/app.js")
+  script
+    $(document).ready(function() {
+      App.username = '#{username}';
+      App.localVideo = $("video#local");
+      App.remoteVideo = $("video#remote");
+      App.openSocket();
+      App.getUserMedia();
+    });
