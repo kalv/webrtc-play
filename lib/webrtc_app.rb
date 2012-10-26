@@ -45,19 +45,10 @@ class WebrtcApp < Sinatra::Base
     haml :talk
   end
 
-  post "/call_user/:username" do
-    p "Calling user - #{params[:username]}" # with offer: #{params[:offer]}"
-    # using string rather than JSON because of issues serializing SDP data over evenstream
-    # will become a non-issue with Socket IO or Websockets
-    data = "#{params[:offer]}----#{session[:username]}"
-    connections[params[:username]] << "event:incoming_call\ndata:#{data}\n\n"
-  end
-
-  post "/answer_call/:username" do
-    p "answering call - #{params[:username]}" # with answer: #{params[:answer]}"
-    # again use string based data struct
-    data = "#{params[:answer]}----#{params[:username]}"
-    connections[params[:username]] << "event:answer_call\ndata:#{data}\n\n"
+  post "/message/:username" do
+    data = request.body.read
+    p "sending message - #{params[:username]} with: #{data}"
+    connections[params[:username]] << "event:message\ndata:#{data}\n\n"
   end
 
   get "/sse" do
@@ -67,7 +58,7 @@ class WebrtcApp < Sinatra::Base
         timer.cancel
       end
       timers[session[:username]] =
-        EventMachine::PeriodicTimer.new(2) {
+        EventMachine::PeriodicTimer.new(1) {
           # TODO: cancel timer if out connection is dead?
           out << "event:users_online\ndata:#{connections.keys.join(",")}\n\n"
         }
